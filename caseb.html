@@ -35,12 +35,13 @@
       display: flex;
       flex-direction: column;
       height: 100vh;
+      font-size: 18px;
       transition: background 0.3s, color 0.3s;
     }
 
     header {
       padding: 1rem 2rem;
-      font-size: 1.3rem;
+      font-size: 1.5rem;
       font-weight: bold;
       text-align: center;
       background-color: var(--input-bg);
@@ -48,14 +49,19 @@
       position: relative;
     }
 
-    .mode-toggle {
+    .header-actions {
       position: absolute;
       top: 1rem;
       right: 1rem;
+      display: flex;
+      gap: 10px;
+    }
+
+    .header-actions button {
       background: none;
       border: 1px solid var(--text-color);
       border-radius: 20px;
-      padding: 5px 15px;
+      padding: 6px 14px;
       cursor: pointer;
       color: var(--text-color);
       background-color: transparent;
@@ -73,9 +79,9 @@
 
     .bubble {
       max-width: 80%;
-      padding: 12px 18px;
+      padding: 14px 20px;
       border-radius: 20px;
-      line-height: 1.5;
+      line-height: 1.6;
       word-wrap: break-word;
       box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
@@ -102,8 +108,8 @@
 
     .input-container input {
       flex: 1;
-      padding: 10px 15px;
-      font-size: 16px;
+      padding: 12px 16px;
+      font-size: 18px;
       border: 1px solid #ccc;
       background-color: #fff;
       color: #000;
@@ -118,7 +124,7 @@
     }
 
     .input-container button {
-      padding: 10px 20px;
+      padding: 12px 20px;
       background-color: var(--primary);
       color: #fff;
       font-weight: bold;
@@ -142,7 +148,10 @@
 <body>
   <header>
     🤖 CASEB - Asistente IA
-    <button class="mode-toggle" onclick="toggleMode()">🌗 Modo</button>
+    <div class="header-actions">
+      <button onclick="toggleMode()">🌗 Modo</button>
+      <button onclick="alert('Redirigiendo a login...')">👤 Iniciar sesión / Registrarse</button>
+    </div>
   </header>
 
   <div class="chat-container" id="chatLog">
@@ -155,12 +164,184 @@
   </div>
 
   <script>
-    const apiKey = "AIzaSyDIsTCKBN99S8IHBLFS8UCdYZayfVz8Kh8"; // 🔐 Coloca aquí tu clave real
-    const cx = "904bcd94bb97648e1";    // ✅ Tu motor de búsqueda
+    const apiKey = "<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CASEB - Asistente IA</title>
+  <style>
+    :root {
+      --bg-color: #ffffff;
+      --text-color: #1e1e1e;
+      --bubble-user: #daf5ff;
+      --bubble-bot: #f2f2f2;
+      --input-bg: #f9f9f9;
+      --primary: #00bcd4;
+    }
+
+    body.dark {
+      --bg-color: #1e1e2f;
+      --text-color: #e6e6e6;
+      --bubble-user: #00ffe7;
+      --bubble-bot: #2c2c3c;
+      --input-bg: #101019;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      font-size: 18px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      padding: 1rem 2rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-align: center;
+      background-color: var(--input-bg);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    .header-actions {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      display: flex;
+      gap: 10px;
+    }
+
+    .header-actions button {
+      background: none;
+      border: 1px solid var(--text-color);
+      border-radius: 20px;
+      padding: 6px 14px;
+      cursor: pointer;
+      color: var(--text-color);
+      background-color: transparent;
+      font-size: 14px;
+    }
+
+    .chat-container {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .bubble {
+      max-width: 80%;
+      padding: 14px 20px;
+      border-radius: 20px;
+      line-height: 1.6;
+      word-wrap: break-word;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .user {
+      align-self: flex-end;
+      background-color: var(--bubble-user);
+      color: #000;
+      border-bottom-right-radius: 0;
+    }
+
+    .bot {
+      align-self: flex-start;
+      background-color: var(--bubble-bot);
+      border-bottom-left-radius: 0;
+    }
+
+    .input-container {
+      display: flex;
+      padding: 10px;
+      background-color: var(--input-bg);
+      border-top: 1px solid #ccc;
+    }
+
+    .input-container input {
+      flex: 1;
+      padding: 12px 16px;
+      font-size: 18px;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      color: #000;
+      border-radius: 8px;
+      margin-right: 10px;
+    }
+
+    body.dark .input-container input {
+      background-color: #2c2c3c;
+      color: #fff;
+      border: none;
+    }
+
+    .input-container button {
+      padding: 12px 20px;
+      background-color: var(--primary);
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      .bubble {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    🤖 CASEB - Asistente IA
+    <div class="header-actions">
+      <button onclick="toggleMode()">🌗 Modo</button>
+      <button onclick="alert('Redirigiendo a login...')">👤 Iniciar sesión / Registrarse</button>
+    </div>
+  </header>
+
+  <div class="chat-container" id="chatLog">
+    <div class="bubble bot">¡Hola! Soy CASEB, tu IA. ¿Qué deseas saber hoy?</div>
+  </div>
+
+  <div class="input-container">
+    <input type="text" id="userInput" placeholder="Escribe tu pregunta aquí...">
+    <button onclick="responder()">Enviar</button>
+  </div>
+
+  <script>
+    const apiKey = "TU_CLAVE_API_AQUI"; // 🔐 Tu clave real
+    const cx = "904bcd94bb97648e1";    // Tu motor de búsqueda
 
     function toggleMode() {
       document.body.classList.toggle("dark");
     }
+
+    document.getElementById("userInput").addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        responder();
+      }
+    });
 
     async function responder() {
       const input = document.getElementById("userInput");
@@ -175,6 +356,7 @@
       chatLog.appendChild(userMsg);
 
       input.value = "";
+      input.focus();
       chatLog.scrollTop = chatLog.scrollHeight;
 
       if (/pol[ií]tica|sexo|violencia|presidente|elecciones/i.test(pregunta)) {
@@ -218,13 +400,111 @@
             ">${sitio}</button>
           `;
         } else {
-          return "No encontré una respuesta clara. ¿Puedes reformular la pregunta?";
+          return generarRespuestaPropia(query);
         }
       } catch (err) {
-        return "Hubo un error al buscar la respuesta. Intenta nuevamente más tarde.";
+        return generarRespuestaPropia(query);
       }
+    }
+
+    function generarRespuestaPropia(pregunta) {
+      // Respuestas simples basadas en palabras clave
+      const lower = pregunta.toLowerCase();
+      if (lower.includes("hora")) return "Puedes ver la hora en tu dispositivo o escribir 'hora actual' en Google.";
+      if (lower.includes("clima")) return "Para conocer el clima, puedes consultar sitios como weather.com o usar tu app del clima.";
+      if (lower.includes("saludo")) return "¡Hola! Espero que tengas un gran día 😊";
+
+      return "Lo siento, no encontré una respuesta exacta, pero estoy aprendiendo más cada día.";
     }
   </script>
 </body>
 </html>
+"; // 🔐 Tu clave real
+    const cx = "904bcd94bb97648e1";    // Tu motor de búsqueda
 
+    function toggleMode() {
+      document.body.classList.toggle("dark");
+    }
+
+    document.getElementById("userInput").addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        responder();
+      }
+    });
+
+    async function responder() {
+      const input = document.getElementById("userInput");
+      const chatLog = document.getElementById("chatLog");
+      const pregunta = input.value.trim();
+
+      if (!pregunta) return;
+
+      const userMsg = document.createElement("div");
+      userMsg.className = "bubble user";
+      userMsg.innerText = pregunta;
+      chatLog.appendChild(userMsg);
+
+      input.value = "";
+      input.focus();
+      chatLog.scrollTop = chatLog.scrollHeight;
+
+      if (/pol[ií]tica|sexo|violencia|presidente|elecciones/i.test(pregunta)) {
+        const respuesta = document.createElement("div");
+        respuesta.className = "bubble bot";
+        respuesta.innerText = "Lo siento, no puedo responder preguntas sobre ese tema.";
+        chatLog.appendChild(respuesta);
+        chatLog.scrollTop = chatLog.scrollHeight;
+        return;
+      }
+
+      const resultado = await buscarEnGoogle(pregunta);
+      const respuesta = document.createElement("div");
+      respuesta.className = "bubble bot";
+      respuesta.innerHTML = resultado;
+      chatLog.appendChild(respuesta);
+      chatLog.scrollTop = chatLog.scrollHeight;
+    }
+
+    async function buscarEnGoogle(query) {
+      const url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${apiKey}&cx=${cx}`;
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (data.items && data.items.length > 0) {
+          const item = data.items[0];
+          const resumen = `Según lo que encontré, ${item.snippet}`;
+          const sitio = new URL(item.link).hostname.replace("www.", "");
+
+          return `
+            <div style="margin-bottom: 10px;">${resumen}</div>
+            <button onclick="window.open('${item.link}', '_blank')" style="
+              background-color: var(--primary);
+              color: white;
+              border: none;
+              padding: 8px 16px;
+              border-radius: 6px;
+              font-weight: bold;
+              cursor: pointer;
+            ">${sitio}</button>
+          `;
+        } else {
+          return generarRespuestaPropia(query);
+        }
+      } catch (err) {
+        return generarRespuestaPropia(query);
+      }
+    }
+
+    function generarRespuestaPropia(pregunta) {
+      // Respuestas simples basadas en palabras clave
+      const lower = pregunta.toLowerCase();
+      if (lower.includes("hora")) return "Puedes ver la hora en tu dispositivo o escribir 'hora actual' en Google.";
+      if (lower.includes("clima")) return "Para conocer el clima, puedes consultar sitios como weather.com o usar tu app del clima.";
+      if (lower.includes("saludo")) return "¡Hola! Espero que tengas un gran día 😊";
+
+      return "Lo siento, no encontré una respuesta exacta, pero estoy aprendiendo más cada día.";
+    }
+  </script>
+</body>
+</html>
