@@ -14,11 +14,8 @@ const CX = process.env.GOOGLE_CX;
 app.post("/preguntar", async (req, res) => {
   const { pregunta } = req.body;
 
-  // Filtro de temas no permitidos
   if (/pol[ií]tica|sexo|violencia|presidente|elecciones/i.test(pregunta)) {
-    return res.json({
-      respuesta: "Lo siento, no puedo responder preguntas sobre ese tema."
-    });
+    return res.json({ respuesta: "Lo siento, no puedo responder preguntas sobre ese tema." });
   }
 
   try {
@@ -26,33 +23,22 @@ app.post("/preguntar", async (req, res) => {
     const response = await fetch(url);
     const data = await response.json();
 
-    // 🔎 Verificar si hubo un error en la API
     if (data.error) {
       console.error("❌ Error en la API:", data.error);
-      return res.json({
-        respuesta: "Error al conectar con Google: " + data.error.message
-      });
+      return res.json({ respuesta: "Error con Google: " + data.error.message });
     }
 
-    // ✅ Si hay resultados
     if (data.items && data.items.length > 0) {
       return res.json({ respuesta: data.items[0].snippet });
     }
 
-    // ⚠️ Sin resultados
-    return res.json({
-      respuesta: "No encontré información exacta, pero estoy aprendiendo más cada día."
-    });
+    return res.json({ respuesta: "No encontré información exacta, pero estoy aprendiendo más cada día." });
   } catch (error) {
-    // ⚠️ Error general
     console.error("❗ Error general:", error);
-    return res.json({
-      respuesta: "Hubo un error buscando la información: " + error.message
-    });
+    return res.json({ respuesta: "Hubo un error: " + error.message });
   }
 });
 
-// Servidor escuchando
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
