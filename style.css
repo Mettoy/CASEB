@@ -1,0 +1,43 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: white;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+header {
+  padding: 1rem;
+  background-color: #f0f0f0;
+  font-size: 1.5rem;
+  text-align: center;
+}
+.chat-container {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+}
+.bubble {
+  padding: 1rem;
+  margin: 0.5rem 0;
+  border-radius: 12px;
+}
+.bot {
+  background-color: #eee;
+}
+.user {
+  background-color: #cce5ff;
+  align-self: flex-end;
+}
+.input-container {
+  display: flex;
+  padding: 1rem;
+  background-color: #f0f0f0;
+}
+.input-container input {
+  flex: 1;
+  padding: 0.5rem;
+}
+.input-container button {
+  padding: 0.5rem 1rem;
+}
