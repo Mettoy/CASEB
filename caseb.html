@@ -45,6 +45,7 @@
       text-align: center;
       background-color: var(--input-bg);
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: relative;
     }
 
     .mode-toggle {
@@ -145,7 +146,7 @@
   </header>
 
   <div class="chat-container" id="chatLog">
-    <div class="bubble bot">¡Hola! Soy CASEB, tu IA asistente. ¿En qué puedo ayudarte hoy?</div>
+    <div class="bubble bot">¡Hola! Soy CASEB, tu IA. ¿Qué deseas saber hoy?</div>
   </div>
 
   <div class="input-container">
@@ -154,8 +155,8 @@
   </div>
 
   <script>
-    const apiKey = "AIzaSyDIsTCKBN99S8IHBLFS8UCdYZayfVz8Kh8"; // 🔐 Tu clave API real aquí
-    const cx = "904bcd94bb97648e1";    // ✅ ID de búsqueda
+    const apiKey = "AIzaSyDIsTCKBN99S8IHBLFS8UCdYZayfVz8Kh8"; // 🔐 Coloca aquí tu clave real
+    const cx = "904bcd94bb97648e1";    // ✅ Tu motor de búsqueda
 
     function toggleMode() {
       document.body.classList.toggle("dark");
@@ -201,9 +202,23 @@
 
         if (data.items && data.items.length > 0) {
           const item = data.items[0];
-          return `Esto es lo que encontré: <strong>${item.title}</strong>. <a href="${item.link}" target="_blank">Leer más</a>`;
+          const resumen = `Según lo que encontré, ${item.snippet}`;
+          const sitio = new URL(item.link).hostname.replace("www.", "");
+
+          return `
+            <div style="margin-bottom: 10px;">${resumen}</div>
+            <button onclick="window.open('${item.link}', '_blank')" style="
+              background-color: var(--primary);
+              color: white;
+              border: none;
+              padding: 8px 16px;
+              border-radius: 6px;
+              font-weight: bold;
+              cursor: pointer;
+            ">${sitio}</button>
+          `;
         } else {
-          return "No encontré una respuesta clara. ¿Podrías intentarlo de otra forma?";
+          return "No encontré una respuesta clara. ¿Puedes reformular la pregunta?";
         }
       } catch (err) {
         return "Hubo un error al buscar la respuesta. Intenta nuevamente más tarde.";
@@ -212,3 +227,4 @@
   </script>
 </body>
 </html>
+
