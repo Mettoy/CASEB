@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CASEB - IA Futurista</title>
+  <title>CASEB - IA Futurista con Bing</title>
   <style>
+    /* Diseño similar al anterior */
     * {
       margin: 0;
       padding: 0;
@@ -128,40 +129,50 @@
   </div>
 
   <script>
-    function responder() {
+    async function responder() {
       const input = document.getElementById("userInput");
       const chatLog = document.getElementById("chatLog");
       const pregunta = input.value.trim().toLowerCase();
 
       if (pregunta === "") return;
 
-      const respuesta = generarRespuesta(pregunta);
-
       chatLog.innerHTML += `<p><strong>Tú:</strong> ${input.value}</p>`;
-      chatLog.innerHTML += `<p><strong>CASEB:</strong> ${respuesta}</p>`;
       input.value = "";
+      chatLog.scrollTop = chatLog.scrollHeight;
+
+      // Realiza la consulta a la API de Bing
+      const respuesta = await obtenerRespuestaBing(pregunta);
+      chatLog.innerHTML += `<p><strong>CASEB:</strong> ${respuesta}</p>`;
       chatLog.scrollTop = chatLog.scrollHeight;
     }
 
-    function generarRespuesta(texto) {
-      if (texto.includes("hola") || texto.includes("buenas")) {
-        return "¡Hola! ¿En qué puedo ayudarte hoy?";
-      } else if (texto.includes("nombre")) {
-        return "Me llamo CASEB, tu IA avanzada y futurista.";
-      } else if (texto.includes("hora")) {
-        return "La hora actual es: " + new Date().toLocaleTimeString();
-      } else if (texto.includes("clima")) {
-        return "No tengo conexión a internet, pero te recomiendo verificar en un sitio de clima confiable.";
-      } else if (texto.includes("gracias")) {
-        return "¡Con gusto! 😊";
-      } else if (texto.includes("adiós") || texto.includes("bye")) {
-        return "¡Hasta luego! 👋";
+    async function obtenerRespuestaBing(query) {
+      const subscriptionKey = "TU_CLAVE_DE_API";  // Reemplaza esto con tu clave de API de Bing
+      const endpoint = "https://api.cognitive.microsoft.com/bing/v7.0/search";
+      const url = `${endpoint}?q=${encodeURIComponent(query)}&textDecorations=true&textFormat=HTML`;
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Ocp-Apim-Subscription-Key": subscriptionKey,
+        },
+      });
+
+      if (!response.ok) {
+        return "Lo siento, no pude obtener una respuesta en este momento.";
+      }
+
+      const data = await response.json();
+      const webPages = data.webPages.value;
+      if (webPages.length > 0) {
+        return `Según lo que encontré en la web, el resultado más relevante es: <a href="${webPages[0].url}" target="_blank">${webPages[0].name}</a>`;
       } else {
-        return "Hmm... no entendí eso. ¿Podrías reformular tu pregunta?";
+        return "No encontré información relevante sobre tu pregunta.";
       }
     }
   </script>
 
 </body>
 </html>
+
 
