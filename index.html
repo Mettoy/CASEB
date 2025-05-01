@@ -2,78 +2,130 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bienvenido a CASEB - IA Asistente</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CASEB - Asistente IA Futurista</title>
   <style>
-    * {
+    body {
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
+      font-family: 'Orbitron', sans-serif;
+      background: radial-gradient(ellipse at center, #0f2027, #203a43, #2c5364);
+      color: #00ffe7;
+      overflow-x: hidden;
     }
 
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #2980b9, #6dd5fa);
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-    }
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
 
-    .container {
-      background-color: rgba(0, 0, 0, 0.5);
-      padding: 40px;
-      border-radius: 15px;
+    .header {
       text-align: center;
-      max-width: 500px;
-      width: 90%;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      padding: 60px 20px 20px;
     }
 
-    h1 {
-      font-size: 2.5em;
-      margin-bottom: 20px;
-      letter-spacing: 1px;
+    .header h1 {
+      font-size: 3em;
+      color: #00ffe7;
+      text-shadow: 0 0 10px #00ffe7;
     }
 
-    p {
+    .header p {
       font-size: 1.2em;
-      margin-bottom: 30px;
+      color: #c8f7f7;
+      margin-top: 10px;
     }
 
-    button {
-      background-color: #27ae60;
-      color: white;
-      padding: 12px 24px;
-      font-size: 1em;
+    .neon-box {
+      background: rgba(0, 0, 0, 0.3);
+      border: 2px solid #00ffe7;
+      box-shadow: 0 0 20px #00ffe7, inset 0 0 10px #00ffe7;
+      padding: 30px;
+      max-width: 800px;
+      margin: 30px auto;
+      border-radius: 15px;
+      text-align: left;
+    }
+
+    .neon-box h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .neon-box ul {
+      list-style-type: square;
+      padding-left: 30px;
+    }
+
+    .neon-box ul li {
+      margin-bottom: 15px;
+      font-size: 1.1em;
+      color: #e0fafa;
+    }
+
+    .start-btn {
+      display: block;
+      margin: 30px auto 0;
+      padding: 15px 30px;
+      font-size: 1.2em;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
+      background: linear-gradient(45deg, #00ffe7, #006666);
+      color: #000;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      box-shadow: 0 0 15px #00ffe7;
+      transition: transform 0.2s, box-shadow 0.3s;
     }
 
-    button:hover {
-      background-color: #219150;
+    .start-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px #00ffe7, 0 0 10px #00ffe7 inset;
     }
 
     footer {
-      margin-top: 20px;
-      font-size: 0.8em;
+      text-align: center;
+      margin-top: 40px;
+      font-size: 0.9em;
       color: #ccc;
+    }
+
+    /* Futuristic animation background (optional) */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: url('https://www.transparenttextures.com/patterns/cubes.png');
+      opacity: 0.03;
+      z-index: -1;
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <h1>Hola, soy CASEB</h1>
-    <p>Tu asistente virtual inteligente. Estoy aquí para ayudarte.</p>
-    <a href="ia_simulada.html"><button>Iniciar Chat</button></a>
-    <footer>
-      <p>&copy; 2025 CASEB AI. Todos los derechos reservados.</p>
-    </footer>
+  <div class="header">
+    <h1>CASEB</h1>
+    <p>Tu Asistente Inteligente del Futuro</p>
   </div>
+
+  <div class="neon-box">
+    <h2>🔮 ¿Qué puede hacer CASEB por ti?</h2>
+    <ul>
+      <li>🧠 Responder preguntas complejas con lenguaje natural</li>
+      <li>📅 Crear recordatorios, tareas y agenda personal</li>
+      <li>🗣️ Asistente de voz y respuestas habladas</li>
+      <li>🌤️ Mostrar el clima en tu ciudad</li>
+      <li>📊 Ayudarte con cálculos y análisis de datos</li>
+      <li>🌐 Buscar información en tiempo real</li>
+      <li>🎵 Reproducir música o sugerirte canciones</li>
+      <li>📍 Darte direcciones o mapas</li>
+      <li>📝 Redactar correos, mensajes o resúmenes</li>
+      <li>⚙️ Personalizar el sistema con comandos únicos</li>
+    </ul>
+
+    <a href="ia_simulada.html"><button class="start-btn">Iniciar con CASEB</button></a>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 CASEB AI. Potenciado por tecnologías inteligentes.</p>
+  </footer>
 
 </body>
 </html>
