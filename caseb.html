@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>CASEB - Tu IA Inteligente</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0d1117;
+      color: #00ffe7;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #b2dfdb;
+      margin-bottom: 20px;
+    }
+
+    input {
+      padding: 12px;
+      width: 60%;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #00ffe7;
+      background-color: #1c1f26;
+      color: white;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin-left: 10px;
+      font-size: 16px;
+      background-color: #00ffe7;
+      color: #000;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .response-box {
+      margin-top: 30px;
+      background: #1e1e1e;
+      padding: 20px;
+      width: 70%;
+      border-radius: 10px;
+      min-height: 100px;
+      box-shadow: 0 0 10px #00ffe7;
+    }
+  </style>
+</head>
+<body>
+  <h1>🤖 CASEB</h1>
+  <p>Tu IA personal. Pregunta lo que quieras (con filtros de seguridad).</p>
+  <div>
+    <input type="text" id="pregunta" placeholder="¿Cuál es la capital de Japón?">
+    <button onclick="consultarCASEB()">Preguntar</button>
+  </div>
+  <div class="response-box" id="respuesta">
+    Esperando tu pregunta...
+  </div>
+
+  <script>
+    async function consultarCASEB() {
+      const pregunta = document.getElementById("pregunta").value.trim();
+      const respuestaDiv = document.getElementById("respuesta");
+
+      if (pregunta === "") {
+        respuestaDiv.innerHTML = "Por favor escribe una pregunta.";
+        return;
+      }
+
+      const palabrasProhibidas = ["política", "presidente", "partido", "elecciones", "asesinato", "violación", "sexo"];
+      if (palabrasProhibidas.some(p => pregunta.toLowerCase().includes(p))) {
+        respuestaDiv.innerHTML = "⚠️ No puedo responder preguntas sobre temas políticos o sensibles.";
+        return;
+      }
+
+      respuestaDiv.innerHTML = "🔍 Consultando CASEB...";
+
+      try {
+        const response = await fetch("http://localhost:3000/consultar", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ pregunta })
+        });
+
+        const data = await response.json();
+        respuestaDiv.innerHTML = data.respuesta || "❌ No se encontró información.";
+      } catch (error) {
+        respuestaDiv.innerHTML = "❌ Error al contactar con el servidor.";
+      }
+    }
+  </script>
+</body>
+</html>
