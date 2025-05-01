@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mini IA en el Navegador</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .chat-container {
+      background-color: #fff;
+      padding: 20px;
+      width: 400px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .chat-log {
+      height: 300px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: #fafafa;
+      border-radius: 5px;
+    }
+
+    .chat-log p {
+      margin: 5px 0;
+    }
+
+    input[type="text"] {
+      width: 75%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      background-color: #3498db;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="chat-container">
+    <h3>Asistente Virtual</h3>
+    <div class="chat-log" id="chatLog">
+      <p><strong>IA:</strong> ¡Hola! Soy tu asistente. Pregúntame algo.</p>
+    </div>
+    <input type="text" id="userInput" placeholder="Escribe tu pregunta...">
+    <button onclick="responder()">Enviar</button>
+  </div>
+
+  <script>
+    function responder() {
+      const input = document.getElementById("userInput");
+      const chatLog = document.getElementById("chatLog");
+      const pregunta = input.value.trim().toLowerCase();
+      if (pregunta === "") return;
+
+      const respuesta = generarRespuesta(pregunta);
+
+      chatLog.innerHTML += `<p><strong>Tú:</strong> ${input.value}</p>`;
+      chatLog.innerHTML += `<p><strong>IA:</strong> ${respuesta}</p>`;
+      input.value = "";
+      chatLog.scrollTop = chatLog.scrollHeight;
+    }
+
+    function generarRespuesta(texto) {
+      if (texto.includes("hola") || texto.includes("buenas")) {
+        return "¡Hola! ¿En qué puedo ayudarte?";
+      } else if (texto.includes("nombre")) {
+        return "Soy una IA simple hecha en JavaScript.";
+      } else if (texto.includes("hora")) {
+        return "La hora actual es: " + new Date().toLocaleTimeString();
+      } else if (texto.includes("gracias")) {
+        return "¡De nada! 😊";
+      } else if (texto.includes("adiós") || texto.includes("bye")) {
+        return "¡Hasta luego!";
+      } else {
+        return "No entendí eso... ¿Puedes reformular la pregunta?";
+      }
+    }
+  </script>
+
+</body>
+</html>
