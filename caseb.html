@@ -1,168 +1,153 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CASEB - IA Futurista con Google</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CASEB - IA Futurista</title>
   <style>
-    /* Diseño similar al anterior */
-    * {
+    body {
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #121212;
+      background-color: #0f2027;
       background-image: linear-gradient(to right, #2c5364, #203a43, #0f2027);
       color: #00ffe7;
+      font-family: 'Segoe UI', sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      overflow: hidden;
     }
 
-    .chat-container {
-      background: rgba(0, 0, 0, 0.8);
-      width: 100%;
-      max-width: 800px;
-      padding: 20px;
+    .container {
+      background: rgba(0, 0, 0, 0.85);
+      padding: 25px;
       border-radius: 15px;
       box-shadow: 0 0 20px #00ffe7;
+      max-width: 800px;
+      width: 100%;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
     }
 
-    h2 {
+    h1 {
       text-align: center;
-      color: #00ffe7;
       margin-bottom: 20px;
+      color: #00ffe7;
     }
 
     .chat-log {
       height: 350px;
       overflow-y: auto;
-      margin-bottom: 20px;
-      background-color: #1e1e1e;
-      border: 1px solid #00ffe7;
-      border-radius: 10px;
+      background-color: #1c1f26;
       padding: 15px;
+      border-radius: 10px;
+      border: 1px solid #00ffe7;
+      margin-bottom: 15px;
       font-size: 14px;
       color: #b2dfdb;
-      display: flex;
-      flex-direction: column;
     }
 
     .chat-log p {
-      margin: 5px 0;
+      margin: 10px 0;
     }
 
     input[type="text"] {
-      width: 100%;
-      padding: 15px;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
       font-size: 16px;
-      border-radius: 10px;
-      border: 1px solid #00ffe7;
-      background-color: #1c1f26;
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+      background-color: #0d1117;
       color: #00ffe7;
-      margin-bottom: 15px;
+      border: 1px solid #00ffe7;
     }
 
     button {
-      padding: 12px 20px;
-      border-radius: 10px;
-      border: none;
-      background-color: #00ffe7;
-      color: #000;
+      padding: 12px;
       font-size: 16px;
+      background-color: #00ffe7;
+      border: none;
+      color: #000;
+      border-radius: 8px;
       cursor: pointer;
-      transition: background-color 0.3s;
     }
 
     button:hover {
       background-color: #01d1c1;
     }
 
-    /* Responsive for mobile */
-    @media (max-width: 768px) {
-      .chat-container {
-        width: 90%;
+    a {
+      color: #1ecbe1;
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      .container {
         padding: 15px;
       }
 
-      input[type="text"] {
-        font-size: 14px;
-      }
-
-      button {
-        font-size: 14px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      body {
-        padding: 10px;
-      }
-
-      h2 {
-        font-size: 20px;
-      }
-
-      .chat-log {
-        font-size: 12px;
+      h1 {
+        font-size: 22px;
       }
     }
   </style>
 </head>
 <body>
-
-  <div class="chat-container">
-    <h2>CASEB - IA Futurista</h2>
+  <div class="container">
+    <h1>🤖 CASEB - Asistente IA</h1>
     <div class="chat-log" id="chatLog">
-      <p><strong>CASEB:</strong> ¡Hola! Soy CASEB, tu IA avanzada. ¿Cómo puedo ayudarte?</p>
+      <p><strong>CASEB:</strong> ¡Hola! Soy CASEB. Pregúntame lo que quieras 🤖</p>
     </div>
-    <input type="text" id="userInput" placeholder="Escribe tu pregunta...">
+    <input type="text" id="userInput" placeholder="Escribe tu pregunta aquí..." />
     <button onclick="responder()">Enviar</button>
   </div>
 
   <script>
+    const apiKey = "TU_CLAVE_API_AQUI"; // 🔐 Reemplaza esto con tu clave real
+    const cx = "904bcd94bb97648e1"; // ✅ Tu motor de búsqueda personalizado
+
     async function responder() {
       const input = document.getElementById("userInput");
       const chatLog = document.getElementById("chatLog");
-      const pregunta = input.value.trim().toLowerCase();
+      const pregunta = input.value.trim();
 
-      if (pregunta === "") return;
+      if (!pregunta) return;
 
-      chatLog.innerHTML += `<p><strong>Tú:</strong> ${input.value}</p>`;
+      chatLog.innerHTML += `<p><strong>Tú:</strong> ${pregunta}</p>`;
       input.value = "";
       chatLog.scrollTop = chatLog.scrollHeight;
 
-      // Realiza la consulta a la API de Google Custom Search
-      const respuesta = await obtenerRespuestaGoogle(pregunta);
+      // Filtro de temas prohibidos
+      if (/pol[ií]tica|presidente|elecciones|sexo|violencia/i.test(pregunta)) {
+        chatLog.innerHTML += `<p><strong>CASEB:</strong> Lo siento, no puedo responder preguntas sobre ese tema.</p>`;
+        chatLog.scrollTop = chatLog.scrollHeight;
+        return;
+      }
+
+      const respuesta = await buscarEnGoogle(pregunta);
       chatLog.innerHTML += `<p><strong>CASEB:</strong> ${respuesta}</p>`;
       chatLog.scrollTop = chatLog.scrollHeight;
     }
 
-    async function obtenerRespuestaGoogle(query) {
-      const apiKey = "AIzaSyDIsTCKBN99S8IHBLFS8UCdYZayfVz8Kh8AIzaSyDIsTCKBN99S8IHBLFS8UCdYZayfVz8Kh8"; // Reemplaza con tu clave de API
-      const cx = "904bcd94bb97648e1";  // Reemplaza con tu ID de motor de búsqueda
-      const endpoint = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${apiKey}&cx=${cx}`;
+    async function buscarEnGoogle(query) {
+      const url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${apiKey}&cx=${cx}`;
 
-      const response = await fetch(endpoint);
-      const data = await response.json();
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
 
-      if (data.items && data.items.length > 0) {
-        return `Según Google, el primer resultado es: <a href="${data.items[0].link}" target="_blank">${data.items[0].title}</a>`;
-      } else {
-        return "Lo siento, no encontré información relevante en Google.";
+        if (data.items && data.items.length > 0) {
+          const item = data.items[0];
+          return `He encontrado esto que podría ayudarte: <strong>${item.title}</strong>. Puedes leer más aquí: <a href="${item.link}" target="_blank">${item.link}</a>`;
+        } else {
+          return "No encontré información clara sobre eso, ¿puedes reformular la pregunta?";
+        }
+      } catch (error) {
+        return "Hubo un error al buscar tu respuesta. Intenta de nuevo más tarde.";
       }
     }
   </script>
-
 </body>
 </html>
-
-
