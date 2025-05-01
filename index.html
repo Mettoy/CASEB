@@ -5,32 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CASEB - Asistente IA</title>
   <style>
-    :root {
-      --bg-color: #ffffff;
-      --text-color: #1e1e1e;
-      --bubble-user: #daf5ff;
-      --bubble-bot: #f2f2f2;
-      --input-bg: #f9f9f9;
-      --primary: #00bcd4;
-    }
-
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      font-family: sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      height: 100vh;
       display: flex;
       flex-direction: column;
-      height: 100vh;
     }
-
     header {
+      background: #00bcd4;
+      color: white;
       padding: 1rem;
-      font-weight: bold;
+      font-size: 1.4rem;
       text-align: center;
-      background: var(--input-bg);
     }
-
-    .chat-container {
+    .chat {
       flex: 1;
       padding: 1rem;
       overflow-y: auto;
@@ -38,41 +28,30 @@
       flex-direction: column;
       gap: 10px;
     }
-
     .bubble {
+      max-width: 70%;
       padding: 10px 15px;
       border-radius: 15px;
-      max-width: 80%;
+      background: #fff;
     }
-
-    .user {
-      background-color: var(--bubble-user);
-      align-self: flex-end;
-    }
-
-    .bot {
-      background-color: var(--bubble-bot);
-      align-self: flex-start;
-    }
-
+    .user { align-self: flex-end; background: #daf5ff; }
+    .bot  { align-self: flex-start; background: #e8e8e8; }
     .input-container {
       display: flex;
       padding: 10px;
-      background-color: var(--input-bg);
+      background: white;
+      border-top: 1px solid #ccc;
     }
-
     input {
       flex: 1;
       padding: 10px;
       border: 1px solid #ccc;
       border-radius: 8px;
-      font-size: 16px;
     }
-
     button {
       margin-left: 10px;
-      padding: 10px 16px;
-      background-color: var(--primary);
+      padding: 10px 20px;
+      background: #00bcd4;
       color: white;
       border: none;
       border-radius: 8px;
@@ -82,62 +61,59 @@
 </head>
 <body>
   <header>🤖 CASEB - Asistente IA</header>
-
-  <div class="chat-container" id="chat">
-    <div class="bubble bot">¡Hola! ¿En qué puedo ayudarte hoy?</div>
-  </div>
-
+  <div class="chat" id="chat"></div>
   <div class="input-container">
-    <input type="text" id="userInput" placeholder="Escribe tu pregunta..." />
+    <input type="text" id="userInput" placeholder="Pregúntame algo..." />
     <button onclick="buscar()">Enviar</button>
   </div>
 
   <script>
-    const apiKey = 'AIzaSyDIsTCKBN99S8IHBLFS8UCdYZayfVz8Kh8'; // ⚠️ Reemplaza con tu clave
-    const cx = '904bcd94bb97648e1';              // ⚠️ Reemplaza con tu CX
+    const apiKey = AIzaSyDIsTCKBN99S8IHBLFS8UCdYZayfVz8Kh8;
+    const cx = 904bcd94bb97648e1;
 
     async function buscar() {
       const input = document.getElementById("userInput");
-      const chat = document.getElementById("chat");
       const pregunta = input.value.trim();
       if (!pregunta) return;
 
-      // Mostrar pregunta del usuario
-      const userDiv = document.createElement("div");
-      userDiv.className = "bubble user";
-      userDiv.textContent = pregunta;
-      chat.appendChild(userDiv);
-
+      agregarMensaje(pregunta, "user");
       input.value = "";
-      input.focus();
-      chat.scrollTop = chat.scrollHeight;
 
       try {
         const url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(pregunta)}&key=${apiKey}&cx=${cx}`;
         const res = await fetch(url);
         const data = await res.json();
 
-        let respuesta = "Lo siento, no encontré resultados.";
-
         if (data.items && data.items.length > 0) {
-          const item = data.items[0];
-          respuesta = `${item.snippet} (ver más: ${item.link})`;
+          let respuesta = "";
+          data.items.slice(0, 2).forEach(item => {
+            respuesta += `<strong>${item.title}</strong><br>${item.snippet}<br><a href="${item.link}" target="_blank">${item.link}</a><br><br>`;
+          });
+          agregarMensaje(respuesta, "bot", true);
+        } else {
+          agregarMensaje("No encontré resultados relevantes. 😕", "bot");
         }
-
-        const botDiv = document.createElement("div");
-        botDiv.className = "bubble bot";
-        botDiv.textContent = respuesta;
-        chat.appendChild(botDiv);
-        chat.scrollTop = chat.scrollHeight;
-      } catch (err) {
-        const errorDiv = document.createElement("div");
-        errorDiv.className = "bubble bot";
-        errorDiv.textContent = "❌ Error al consultar Google.";
-        chat.appendChild(errorDiv);
+      } catch (e) {
+        agregarMensaje("❌ Error al consultar Google.", "bot");
       }
     }
 
-    // Enter para enviar
+    function agregarMensaje(texto, tipo, esHTML = false) {
+      const chat = document.getElementById("chat");
+      const div = document.createElement("div");
+      div.className = `bubble ${tipo}`;
+      div.innerHTML = esHTML ? texto : escapeHtml(texto);
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function escapeHtml(unsafe) {
+      return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
     document.getElementById("userInput").addEventListener("keydown", e => {
       if (e.key === "Enter") buscar();
     });
