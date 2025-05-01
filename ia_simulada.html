@@ -1,37 +1,118 @@
-const express = require("express");
-const cors = require("cors");
-const fetch = require("node-fetch");
-require("dotenv").config();
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>CASEB - IA Simulada</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #0f2027;
+      background-image: linear-gradient(to right, #2c5364, #203a43, #0f2027);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
 
-const app = express();
-app.use(cors());
-app.use(express.json());
+    .chat-container {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 30px;
+      width: 400px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px #00ffe7;
+    }
 
-const BING_KEY = process.env.BING_API_KEY;
+    .chat-log {
+      height: 300px;
+      overflow-y: auto;
+      border: 1px solid #00ffe7;
+      padding: 10px;
+      margin-bottom: 15px;
+      background-color: #1c1f26;
+      border-radius: 10px;
+      font-size: 14px;
+    }
 
-app.post("/consultar", async (req, res) => {
-  const { pregunta } = req.body;
+    .chat-log p {
+      margin: 6px 0;
+    }
 
-  const banned = ["política", "presidente", "partido", "elecciones", "violación", "asesinato", "sexo"];
-  if (banned.some(p => pregunta.toLowerCase().includes(p))) {
-    return res.json({ respuesta: "❌ No puedo responder esa pregunta." });
-  }
+    input[type="text"] {
+      width: 75%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #00ffe7;
+      background-color: #1e272e;
+      color: #00ffe7;
+    }
 
-  const url = `https://api.bing.microsoft.com/v7.0/search?q=${encodeURIComponent(pregunta)}`;
+    button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      background-color: #00ffe7;
+      color: #000;
+      cursor: pointer;
+      margin-left: 5px;
+    }
 
-  try {
-    const r = await fetch(url, {
-      headers: { "Ocp-Apim-Subscription-Key": BING_KEY }
-    });
-    const json = await r.json();
-    const resultado = json.webPages?.value?.[0]?.snippet || "No se encontró información precisa.";
-    res.json({ respuesta: resultado });
-  } catch (err) {
-    console.error(err);
-    res.json({ respuesta: "❌ Error al buscar la información." });
-  }
-});
+    button:hover {
+      background-color: #01d1c1;
+    }
 
-app.listen(3000, () => {
-  console.log("CASEB IA corriendo en http://localhost:3000");
-});
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #00ffe7;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="chat-container">
+    <h2>CASEB - IA Simulada</h2>
+    <div class="chat-log" id="chatLog">
+      <p><strong>CASEB:</strong> ¡Hola! Soy tu asistente. Pregúntame algo.</p>
+    </div>
+    <input type="text" id="userInput" placeholder="Escribe tu pregunta...">
+    <button onclick="responder()">Enviar</button>
+  </div>
+
+  <script>
+    function responder() {
+      const input = document.getElementById("userInput");
+      const chatLog = document.getElementById("chatLog");
+      const pregunta = input.value.trim().toLowerCase();
+      if (pregunta === "") return;
+
+      const respuesta = generarRespuesta(pregunta);
+
+      chatLog.innerHTML += `<p><strong>Tú:</strong> ${input.value}</p>`;
+      chatLog.innerHTML += `<p><strong>CASEB:</strong> ${respuesta}</p>`;
+      input.value = "";
+      chatLog.scrollTop = chatLog.scrollHeight;
+    }
+
+    function generarRespuesta(texto) {
+      if (texto.includes("hola") || texto.includes("buenas")) {
+        return "¡Hola! ¿En qué puedo ayudarte?";
+      } else if (texto.includes("nombre")) {
+        return "Me llamo CASEB, tu IA simulada.";
+      } else if (texto.includes("hora")) {
+        return "La hora actual es: " + new Date().toLocaleTimeString();
+      } else if (texto.includes("clima")) {
+        return "No tengo conexión a internet, pero te recomiendo verificar en un sitio de clima confiable.";
+      } else if (texto.includes("gracias")) {
+        return "¡Con gusto! 😊";
+      } else if (texto.includes("adiós") || texto.includes("bye")) {
+        return "¡Hasta luego! 👋";
+      } else {
+        return "Hmm... no entendí eso. ¿Podrías reformular tu pregunta?";
+      }
+    }
+  </script>
+
+</body>
+</html>
