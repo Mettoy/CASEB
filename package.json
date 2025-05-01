@@ -1,17 +1,14 @@
 {
   "name": "caseb-asistente",
   "version": "1.0.0",
-  "description": "Asistente IA con búsquedas mediante Google Custom Search",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
-  "author": "Tu Nombre",
-  "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
-    "dotenv": "^16.0.3",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "node-fetch": "^2.6.7"
+    "node-fetch": "^2.6.12"
   }
 }
