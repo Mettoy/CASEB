@@ -2,101 +2,166 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>CASEB - Tu IA Inteligente</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CASEB - IA Futurista</title>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: #0d1117;
+      background-color: #121212;
+      background-image: linear-gradient(to right, #2c5364, #203a43, #0f2027);
       color: #00ffe7;
       display: flex;
-      flex-direction: column;
+      justify-content: center;
       align-items: center;
-      padding: 40px;
+      height: 100vh;
+      overflow: hidden;
     }
 
-    h1 {
-      margin-bottom: 10px;
+    .chat-container {
+      background: rgba(0, 0, 0, 0.8);
+      width: 100%;
+      max-width: 800px;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px #00ffe7;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
     }
 
-    p {
-      color: #b2dfdb;
+    h2 {
+      text-align: center;
+      color: #00ffe7;
       margin-bottom: 20px;
     }
 
-    input {
-      padding: 12px;
-      width: 60%;
+    .chat-log {
+      height: 350px;
+      overflow-y: auto;
+      margin-bottom: 20px;
+      background-color: #1e1e1e;
+      border: 1px solid #00ffe7;
+      border-radius: 10px;
+      padding: 15px;
+      font-size: 14px;
+      color: #b2dfdb;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-log p {
+      margin: 5px 0;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 15px;
       font-size: 16px;
-      border-radius: 5px;
+      border-radius: 10px;
       border: 1px solid #00ffe7;
       background-color: #1c1f26;
-      color: white;
+      color: #00ffe7;
+      margin-bottom: 15px;
     }
 
     button {
-      padding: 10px 20px;
-      margin-left: 10px;
-      font-size: 16px;
+      padding: 12px 20px;
+      border-radius: 10px;
+      border: none;
       background-color: #00ffe7;
       color: #000;
-      border: none;
-      border-radius: 5px;
+      font-size: 16px;
       cursor: pointer;
+      transition: background-color 0.3s;
     }
 
-    .response-box {
-      margin-top: 30px;
-      background: #1e1e1e;
-      padding: 20px;
-      width: 70%;
-      border-radius: 10px;
-      min-height: 100px;
-      box-shadow: 0 0 10px #00ffe7;
+    button:hover {
+      background-color: #01d1c1;
+    }
+
+    /* Responsive for mobile */
+    @media (max-width: 768px) {
+      .chat-container {
+        width: 90%;
+        padding: 15px;
+      }
+
+      input[type="text"] {
+        font-size: 14px;
+      }
+
+      button {
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
+
+      .chat-log {
+        font-size: 12px;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>🤖 CASEB</h1>
-  <p>Tu IA personal. Pregunta lo que quieras (con filtros de seguridad).</p>
-  <div>
-    <input type="text" id="pregunta" placeholder="¿Cuál es la capital de Japón?">
-    <button onclick="consultarCASEB()">Preguntar</button>
-  </div>
-  <div class="response-box" id="respuesta">
-    Esperando tu pregunta...
+
+  <div class="chat-container">
+    <h2>CASEB - IA Futurista</h2>
+    <div class="chat-log" id="chatLog">
+      <p><strong>CASEB:</strong> ¡Hola! Soy CASEB, tu IA avanzada. ¿Cómo puedo ayudarte?</p>
+    </div>
+    <input type="text" id="userInput" placeholder="Escribe tu pregunta...">
+    <button onclick="responder()">Enviar</button>
   </div>
 
   <script>
-    async function consultarCASEB() {
-      const pregunta = document.getElementById("pregunta").value.trim();
-      const respuestaDiv = document.getElementById("respuesta");
+    function responder() {
+      const input = document.getElementById("userInput");
+      const chatLog = document.getElementById("chatLog");
+      const pregunta = input.value.trim().toLowerCase();
 
-      if (pregunta === "") {
-        respuestaDiv.innerHTML = "Por favor escribe una pregunta.";
-        return;
-      }
+      if (pregunta === "") return;
 
-      const palabrasProhibidas = ["política", "presidente", "partido", "elecciones", "asesinato", "violación", "sexo"];
-      if (palabrasProhibidas.some(p => pregunta.toLowerCase().includes(p))) {
-        respuestaDiv.innerHTML = "⚠️ No puedo responder preguntas sobre temas políticos o sensibles.";
-        return;
-      }
+      const respuesta = generarRespuesta(pregunta);
 
-      respuestaDiv.innerHTML = "🔍 Consultando CASEB...";
+      chatLog.innerHTML += `<p><strong>Tú:</strong> ${input.value}</p>`;
+      chatLog.innerHTML += `<p><strong>CASEB:</strong> ${respuesta}</p>`;
+      input.value = "";
+      chatLog.scrollTop = chatLog.scrollHeight;
+    }
 
-      try {
-        const response = await fetch("http://localhost:3000/consultar", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ pregunta })
-        });
-
-        const data = await response.json();
-        respuestaDiv.innerHTML = data.respuesta || "❌ No se encontró información.";
-      } catch (error) {
-        respuestaDiv.innerHTML = "❌ Error al contactar con el servidor.";
+    function generarRespuesta(texto) {
+      if (texto.includes("hola") || texto.includes("buenas")) {
+        return "¡Hola! ¿En qué puedo ayudarte hoy?";
+      } else if (texto.includes("nombre")) {
+        return "Me llamo CASEB, tu IA avanzada y futurista.";
+      } else if (texto.includes("hora")) {
+        return "La hora actual es: " + new Date().toLocaleTimeString();
+      } else if (texto.includes("clima")) {
+        return "No tengo conexión a internet, pero te recomiendo verificar en un sitio de clima confiable.";
+      } else if (texto.includes("gracias")) {
+        return "¡Con gusto! 😊";
+      } else if (texto.includes("adiós") || texto.includes("bye")) {
+        return "¡Hasta luego! 👋";
+      } else {
+        return "Hmm... no entendí eso. ¿Podrías reformular tu pregunta?";
       }
     }
   </script>
+
 </body>
 </html>
+
