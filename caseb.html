@@ -3,8 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CASEB - IA Conversacional</title>
+  <title>CASEB - Asistente IA</title>
   <style>
+    :root {
+      --bg-color: #ffffff;
+      --text-color: #1e1e1e;
+      --bubble-user: #daf5ff;
+      --bubble-bot: #f2f2f2;
+      --input-bg: #f9f9f9;
+      --primary: #00bcd4;
+    }
+
+    body.dark {
+      --bg-color: #1e1e2f;
+      --text-color: #e6e6e6;
+      --bubble-user: #00ffe7;
+      --bubble-bot: #2c2c3c;
+      --input-bg: #101019;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -13,21 +30,35 @@
 
     body {
       font-family: 'Segoe UI', sans-serif;
-      background-color: #1e1e2f;
-      color: #e6e6e6;
+      background-color: var(--bg-color);
+      color: var(--text-color);
       display: flex;
       flex-direction: column;
       height: 100vh;
+      transition: background 0.3s, color 0.3s;
     }
 
     header {
-      background: #101019;
       padding: 1rem 2rem;
       font-size: 1.3rem;
       font-weight: bold;
-      color: #00ffe7;
       text-align: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+      background-color: var(--input-bg);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .mode-toggle {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: 1px solid var(--text-color);
+      border-radius: 20px;
+      padding: 5px 15px;
+      cursor: pointer;
+      color: var(--text-color);
+      background-color: transparent;
+      font-size: 14px;
     }
 
     .chat-container {
@@ -44,45 +75,51 @@
       padding: 12px 18px;
       border-radius: 20px;
       line-height: 1.5;
-      position: relative;
       word-wrap: break-word;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
 
     .user {
       align-self: flex-end;
-      background-color: #00ffe7;
+      background-color: var(--bubble-user);
       color: #000;
       border-bottom-right-radius: 0;
     }
 
     .bot {
       align-self: flex-start;
-      background-color: #2c2c3c;
+      background-color: var(--bubble-bot);
       border-bottom-left-radius: 0;
     }
 
     .input-container {
       display: flex;
       padding: 10px;
-      background-color: #101019;
-      border-top: 1px solid #333;
+      background-color: var(--input-bg);
+      border-top: 1px solid #ccc;
     }
 
     .input-container input {
       flex: 1;
       padding: 10px 15px;
       font-size: 16px;
-      background-color: #2c2c3c;
-      color: #fff;
-      border: none;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      color: #000;
       border-radius: 8px;
       margin-right: 10px;
     }
 
+    body.dark .input-container input {
+      background-color: #2c2c3c;
+      color: #fff;
+      border: none;
+    }
+
     .input-container button {
       padding: 10px 20px;
-      background-color: #00ffe7;
-      color: #000;
+      background-color: var(--primary);
+      color: #fff;
       font-weight: bold;
       border: none;
       border-radius: 8px;
@@ -90,7 +127,8 @@
     }
 
     a {
-      color: #00ffe7;
+      color: var(--primary);
+      text-decoration: underline;
     }
 
     @media (max-width: 600px) {
@@ -101,9 +139,13 @@
   </style>
 </head>
 <body>
-  <header>🤖 CASEB - Asistente IA</header>
+  <header>
+    🤖 CASEB - Asistente IA
+    <button class="mode-toggle" onclick="toggleMode()">🌗 Modo</button>
+  </header>
+
   <div class="chat-container" id="chatLog">
-    <div class="bubble bot">¡Hola! Soy CASEB, tu IA futurista. ¿En qué puedo ayudarte hoy?</div>
+    <div class="bubble bot">¡Hola! Soy CASEB, tu IA asistente. ¿En qué puedo ayudarte hoy?</div>
   </div>
 
   <div class="input-container">
@@ -112,8 +154,12 @@
   </div>
 
   <script>
-    const apiKey = "TU_CLAVE_API_AQUI"; // 🔐 Pega tu clave aquí
-    const cx = "904bcd94bb97648e1";    // ✅ Tu motor de búsqueda personalizado
+    const apiKey = "AIzaSyDIsTCKBN99S8IHBLFS8UCdYZayfVz8Kh8"; // 🔐 Tu clave API real aquí
+    const cx = "904bcd94bb97648e1";    // ✅ ID de búsqueda
+
+    function toggleMode() {
+      document.body.classList.toggle("dark");
+    }
 
     async function responder() {
       const input = document.getElementById("userInput");
@@ -122,7 +168,6 @@
 
       if (!pregunta) return;
 
-      // Añadir mensaje del usuario
       const userMsg = document.createElement("div");
       userMsg.className = "bubble user";
       userMsg.innerText = pregunta;
@@ -131,7 +176,6 @@
       input.value = "";
       chatLog.scrollTop = chatLog.scrollHeight;
 
-      // Filtro básico de temas no permitidos
       if (/pol[ií]tica|sexo|violencia|presidente|elecciones/i.test(pregunta)) {
         const respuesta = document.createElement("div");
         respuesta.className = "bubble bot";
@@ -141,7 +185,6 @@
         return;
       }
 
-      // Buscar en Google Custom Search
       const resultado = await buscarEnGoogle(pregunta);
       const respuesta = document.createElement("div");
       respuesta.className = "bubble bot";
@@ -163,10 +206,9 @@
           return "No encontré una respuesta clara. ¿Podrías intentarlo de otra forma?";
         }
       } catch (err) {
-        return "Lo siento, hubo un error al buscar tu respuesta. Intenta más tarde.";
+        return "Hubo un error al buscar la respuesta. Intenta nuevamente más tarde.";
       }
     }
   </script>
 </body>
 </html>
-
