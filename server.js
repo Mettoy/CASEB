@@ -1,42 +1,31 @@
 const express = require("express");
-const cors = require("cors");
 const fetch = require("node-fetch");
+const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
+const PORT = process.env.PORT || 3000;
+const API_KEY = process.env.API_KEY;
+const CX = process.env.CX;
+
 app.use(cors());
+app.use(express.static("public"));
 app.use(express.json());
 
-const BING_KEY = process.env.BING_API_KEY;
-
-app.post("/consultar", async (req, res) => {
-  const { pregunta } = req.body;
-
-  // Filtro de seguridad
-  const prohibido = ["política", "presidente", "partido", "elecciones", "violación", "asesinato", "sexo"];
-  if (prohibido.some(p => pregunta.toLowerCase().includes(p))) {
-    return res.json({ respuesta: "❌ Lo siento, no puedo responder esa pregunta." });
-  }
-
-  const url = `https://api.bing.microsoft.com/v7.0/search?q=${encodeURIComponent(pregunta)}`;
+app.post("/buscar", async (req, res) => {
+  const query = req.body.query;
+  const url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${API_KEY}&cx=${CX}`;
 
   try {
-    const r = await fetch(url, {
-      headers: {
-        "Ocp-Apim-Subscription-Key": BING_KEY
-      }
-    });
-    const json = await r.json();
-
-    const resultado = json.webPages?.value?.[0]?.snippet || "❌ No se encontró información precisa.";
-    res.json({ respuesta: resultado });
-
+    const respuesta = await fetch(url);
+    const datos = await respuesta.json();
+    res.json(datos);
   } catch (err) {
-    console.error("Error:", err);
-    res.json({ respuesta: "❌ Hubo un error al buscar la información." });
+    console.error(err);
+    res.status(500).json({ error: "Error en la búsqueda" });
   }
 });
 
-app.listen(3000, () => {
-  console.log("✅ CASEB Server activo en http://localhost:3000");
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
