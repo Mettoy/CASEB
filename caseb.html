@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CASEB - IA Futurista con Bing</title>
+  <title>CASEB - IA Futurista con Google</title>
   <style>
     /* Diseño similar al anterior */
     * {
@@ -140,34 +140,24 @@
       input.value = "";
       chatLog.scrollTop = chatLog.scrollHeight;
 
-      // Realiza la consulta a la API de Bing
-      const respuesta = await obtenerRespuestaBing(pregunta);
+      // Realiza la consulta a la API de Google Custom Search
+      const respuesta = await obtenerRespuestaGoogle(pregunta);
       chatLog.innerHTML += `<p><strong>CASEB:</strong> ${respuesta}</p>`;
       chatLog.scrollTop = chatLog.scrollHeight;
     }
 
-    async function obtenerRespuestaBing(query) {
-      const subscriptionKey = "TU_CLAVE_DE_API";  // Reemplaza esto con tu clave de API de Bing
-      const endpoint = "https://api.cognitive.microsoft.com/bing/v7.0/search";
-      const url = `${endpoint}?q=${encodeURIComponent(query)}&textDecorations=true&textFormat=HTML`;
+    async function obtenerRespuestaGoogle(query) {
+      const apiKey = "AIzaSyDIsTCKBN99S8IHBLFS8UCdYZayfVz8Kh8AIzaSyDIsTCKBN99S8IHBLFS8UCdYZayfVz8Kh8"; // Reemplaza con tu clave de API
+      const cx = "904bcd94bb97648e1";  // Reemplaza con tu ID de motor de búsqueda
+      const endpoint = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${apiKey}&cx=${cx}`;
 
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Ocp-Apim-Subscription-Key": subscriptionKey,
-        },
-      });
-
-      if (!response.ok) {
-        return "Lo siento, no pude obtener una respuesta en este momento.";
-      }
-
+      const response = await fetch(endpoint);
       const data = await response.json();
-      const webPages = data.webPages.value;
-      if (webPages.length > 0) {
-        return `Según lo que encontré en la web, el resultado más relevante es: <a href="${webPages[0].url}" target="_blank">${webPages[0].name}</a>`;
+
+      if (data.items && data.items.length > 0) {
+        return `Según Google, el primer resultado es: <a href="${data.items[0].link}" target="_blank">${data.items[0].title}</a>`;
       } else {
-        return "No encontré información relevante sobre tu pregunta.";
+        return "Lo siento, no encontré información relevante en Google.";
       }
     }
   </script>
