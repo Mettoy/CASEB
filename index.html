@@ -150,7 +150,7 @@
     🤖 CASEB - Asistente IA
     <div class="header-actions">
       <button onclick="toggleMode()">🌗 Modo</button>
-      <button onclick="alert('Redirigiendo a login...')">👤 Iniciar sesión / Registrarse</button>
+      <button onclick="alert('Función de login no disponible todavía.')">👤 Iniciar sesión</button>
     </div>
   </header>
 
@@ -178,7 +178,6 @@
       const input = document.getElementById("userInput");
       const chatLog = document.getElementById("chatLog");
       const pregunta = input.value.trim();
-
       if (!pregunta) return;
 
       const userMsg = document.createElement("div");
@@ -196,17 +195,17 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ pregunta })
         });
-
         const data = await res.json();
-        const respuesta = document.createElement("div");
-        respuesta.className = "bubble bot";
-        respuesta.innerText = data.respuesta;
-        chatLog.appendChild(respuesta);
+
+        const botMsg = document.createElement("div");
+        botMsg.className = "bubble bot";
+        botMsg.innerText = data.respuesta;
+        chatLog.appendChild(botMsg);
         chatLog.scrollTop = chatLog.scrollHeight;
-      } catch (error) {
+      } catch (err) {
         const errorMsg = document.createElement("div");
         errorMsg.className = "bubble bot";
-        errorMsg.innerText = "Hubo un error al conectar con el servidor.";
+        errorMsg.innerText = "⚠️ Error al conectar con el servidor.";
         chatLog.appendChild(errorMsg);
         chatLog.scrollTop = chatLog.scrollHeight;
       }
